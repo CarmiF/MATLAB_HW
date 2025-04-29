@@ -8,9 +8,10 @@ h = (rho * pi) / (M * 5);
 A = build_A(h, rho, M ,'sqrt');
 q_exact = [2;0;8;8;3;9;8;4;5;2;0;8;8;3;9;8;4;5];
 tol = 10^-3;
+v = A * q_exact;
 StrCon = zeros(length(v), 1);
 
-v = A * q;
+
 [q_gauss_seidel] = gauss_seidel(A, v, q_exact, tol, StrCon);
 
 %---------------------------- Qestion 1a-------------------------------
