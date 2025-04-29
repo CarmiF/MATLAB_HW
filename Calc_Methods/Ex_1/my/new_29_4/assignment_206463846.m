@@ -26,14 +26,14 @@ v = A * q_exact;
 [q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
 
 % Plot Results
-subplot(1,1,1); % 5 rows, 1 column, first plot
+subplot(5,1,1); % 5 rows, 1 column, first plot
 semilogy(real_err, '-o');  % First line
 hold on;
 semilogy(rel_dis, '--*');  % Second line
 hold off;
 
 xlabel('Iterations');
-ylabel('Relative Error (log scale)');
+ylabel('Error (log)');
 title('(Run 1a)');
 grid on;
 
@@ -42,9 +42,44 @@ grid on;
 %---------------------------- Qestion 1b-------------------------------
 
 %-------h = (rho * pi) / (M )------------
+h = (rho * pi) / (M);
+A = build_A(h, rho, M ,'sqrt');
+v = A * q_exact;
 
+% Gauss-Seidel
+[q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
+
+% Plot Results
+subplot(5,1,2); % 5 rows, 1 column, first plot
+semilogy(real_err, '-o');  % First line
+hold on;
+semilogy(rel_dis, '--*');  % Second line
+hold off;
+
+xlabel('Iterations');
+ylabel('Error (log)');
+title('(Run 1a)');
+grid on;
 
 %-------h = (rho * pi) / (M * 2 )--------
+h = (rho * pi) / (M * 2);
+A = build_A(h, rho, M ,'sqrt');
+v = A * q_exact;
+
+% Gauss-Seidel
+[q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
+
+% Plot Results
+subplot(5,1,3); % 5 rows, 1 column, first plot
+semilogy(real_err, '-o');  % First line
+hold on;
+semilogy(rel_dis, '--*');  % Second line
+hold off;
+
+xlabel('Iterations');
+ylabel('Error (log)');
+title('(Run 1a)');
+grid on;
 
 %---------------------------- Qestion 1c-------------------------------
 
@@ -74,14 +109,15 @@ function [q_current, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCo
     G = Q \ (U);
     q_previous = C;
     i = 1;
-    err = max(abs((q_exact-q_previous)./q_exact));
+    err = norm(q_exact-q_previous,'inf');
     rel_dis = [];
     while err > tol && i <1001
         
-        real_err(i) = err;
         q_current = G * q_previous + C;
-        rel_dis(i) = max(abs((q_current-q_previous)./q_previous));
-        err = max(abs((q_exact-q_current)./q_exact));
+        real_err(i) = norm(q_current - q_exact,'inf') / norm(q_exact,'inf');
+
+        rel_dis(i) = norm(q_current - q_previous, 'inf') / norm(q_previous, 'inf');
+        err = norm(q_exact-q_previous,'inf');
         q_previous = q_current;
         i = i + 1;
     
