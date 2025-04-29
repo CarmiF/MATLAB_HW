@@ -2,19 +2,41 @@
 
 
 %---------------------------- Qestion 1-------------------------------
+% Data General Defenitions
 M = 18;
 rho = 1;
-h = (rho * pi) / (M * 5);
-A = build_A(h, rho, M ,'sqrt');
 q_exact = [2;0;8;8;3;9;8;4;5;2;0;8;8;3;9;8;4;5];
 tol = 10^-3;
-v = A * q_exact;
-StrCon = zeros(length(v), 1);
+StrCon = zeros(length(q_exact), 1);
 
+% Plotting General Defenitions
+Q1 = figure('Visible', 'on');
+movegui(Q1, 'west');
 
-[q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
+% Gauss-Seidel
 
 %---------------------------- Qestion 1a-------------------------------
+% 1a Defenitions
+
+h = (rho * pi) / (M * 5);
+A = build_A(h, rho, M ,'sqrt');
+v = A * q_exact;
+
+% Gauss-Seidel
+[q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
+
+% Plot Results
+subplot(1,1,1); % 5 rows, 1 column, first plot
+semilogy(real_err, '-o');  % First line
+hold on;
+semilogy(rel_dis, '--*');  % Second line
+hold off;
+
+xlabel('Iterations');
+ylabel('Relative Error (log scale)');
+title('(Run 1a)');
+grid on;
+
 
 
 %---------------------------- Qestion 1b-------------------------------
