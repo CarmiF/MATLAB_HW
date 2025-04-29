@@ -12,7 +12,7 @@ v = A * q_exact;
 StrCon = zeros(length(v), 1);
 
 
-[q_gauss_seidel] = gauss_seidel(A, v, q_exact, tol, StrCon);
+[q_gauss_seidel, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon);
 
 %---------------------------- Qestion 1a-------------------------------
 
@@ -43,23 +43,26 @@ StrCon = zeros(length(v), 1);
 
 
 %% ------------------------------jacobi & gauss_seidel------------------------------------------------------------------------------
-function [q_current] = gauss_seidel(A, v, q_exact, tol, StrCon)
+function [q_current, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon)
     D = diag(diag(A));
     L = tril(A, -1);
     Q = L + D;
     U =  Q - A;
     C = Q \ v;
     G = Q \ (U);
-    q_previous = StrCon;
+    q_previous = C;
     i = 1;
     err = max(abs((q_exact-q_previous)./q_exact));
+    rel_dis = [];
     while err > tol && i <1001
         
-        
+        real_err(i) = err;
         q_current = G * q_previous + C;
+        rel_dis(i) = max(abs((q_current-q_previous)./q_previous));
         err = max(abs((q_exact-q_current)./q_exact));
         q_previous = q_current;
         i = i + 1;
+    
     end
 end
 %% ------------------------------Plot Figure------------------------------------------------------------------------------
