@@ -57,7 +57,7 @@ function [q_current] = gauss_seidel(A, v, q_exact, tol, StrCon)
         
         
         q_current = G * q_previous + C;
-        err = max(abs((q_exact-q_previous)./q_exact));
+        err = max(abs((q_exact-q_current)./q_exact));
         q_previous = q_current;
         i = i + 1;
     end
