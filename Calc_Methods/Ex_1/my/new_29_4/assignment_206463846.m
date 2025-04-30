@@ -58,7 +58,7 @@ hold off;
 
 xlabel('Iterations');
 ylabel('Error (log)');
-title('(Run 1a)');
+title('(Run 1b)');
 grid on;
 
 %-------h = (rho * pi) / (M * 2 )--------
@@ -83,6 +83,25 @@ grid on;
 
 %---------------------------- Qestion 1c-------------------------------
 
+h = (rho * pi) / (M * 5);
+A = build_A(h, rho, M ,'sqrt');
+v = A * q_exact;
+
+% Jacobi
+[q_gauss_seidel, real_err, rel_dis] = jacobi(A, v, q_exact, tol, StrCon);
+
+% Plot Results
+subplot(5,1,4); % 5 rows, 1 column, first plot
+semilogy(real_err, '-o');  % First line
+hold on;
+semilogy(rel_dis, '--*');  % Second line
+hold off;
+
+xlabel('Iterations');
+ylabel('Error (log)');
+title('(Run 1c)');
+grid on;
+
 %---------------------------- Qestion 1d-------------------------------
 
 
@@ -99,7 +118,7 @@ grid on;
 %% --- Functions ---
 
 
-%% ------------------------------jacobi & gauss_seidel------------------------------------------------------------------------------
+%% ------------------------------Gauss-Seidel------------------------------------------------------------------------------
 function [q_current, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCon)
     D = diag(diag(A));
     L = tril(A, -1);
@@ -112,6 +131,31 @@ function [q_current, real_err, rel_dis] = gauss_seidel(A, v, q_exact, tol, StrCo
     err = norm(q_exact-q_previous,'inf');
     rel_dis = [];
     while err > tol && i <1001
+        
+        q_current = G * q_previous + C;
+        real_err(i) = norm(q_current - q_exact,'inf') / norm(q_exact,'inf');
+
+        rel_dis(i) = norm(q_current - q_previous, 'inf') / norm(q_previous, 'inf');
+        err = norm(q_exact-q_previous,'inf');
+        q_previous = q_current;
+        i = i + 1;
+    
+    end
+end
+%% ------------------------------Jacobi------------------------------------------------------------------------------
+
+function [q_current, real_err, rel_dis] = jacobi(A, v, q_exact, tol, StrCon)
+    D = diag(diag(A));
+    L = tril(A, -1);
+    Q = L + D;
+    U =  A - Q;
+    C = D \ v;
+    G = -D \ (L+U);
+    q_previous = C;
+    i = 1;
+    err = norm(q_exact-q_previous,'inf');
+    rel_dis = [];
+    while err > tol && i <1000
         
         q_current = G * q_previous + C;
         real_err(i) = norm(q_current - q_exact,'inf') / norm(q_exact,'inf');
