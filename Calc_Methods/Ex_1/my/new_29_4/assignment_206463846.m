@@ -126,7 +126,27 @@ grid on;
 
 
 %---------------------------- Qestion 2-------------------------------
+% 1a Defenitions
 
+a = [1/5 ,1/2 ,2 ,2.5 ,10];
+q_aproxx_met = zeros(5, 18);
+
+for i=1:5
+
+    h = (a(i) * rho * pi) / (M);
+    A = build_A(h, rho, M ,'sqrt');
+    v = A * q_exact;
+    
+    detA(i) = abs(det(A));
+    disp(detA);
+    
+    trans_A = transpose(A);
+    q_aproxx_met(i, :) = inv(trans_A * A) * trans_A * v;
+    rel_err(i) = (norm(q_sol - q_exact)) / norm(q_exact);
+    %q_error = misum(((A * q_sol) - v).^2)^0.5;
+
+
+end
 
 %---------------------------- Qestion 2a-------------------------------
 
