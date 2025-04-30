@@ -58,10 +58,10 @@ hold off;
 
 xlabel('Iterations');
 ylabel('Error (log)');
-title('(Run 1b)');
+title('(Run 1b - h = (rho * pi) / (M ))');
 grid on;
 
-%-------h = (rho * pi) / (M * 2 )--------
+%-------h = (rho * pi) / (M * 2)--------
 h = (rho * pi) / (M * 2);
 A = build_A(h, rho, M ,'sqrt');
 v = A * q_exact;
@@ -78,7 +78,7 @@ hold off;
 
 xlabel('Iterations');
 ylabel('Error (log)');
-title('(Run 1a)');
+title('(Run 1b - h = (rho * pi) / (M * 2 )');
 grid on;
 
 %---------------------------- Qestion 1c-------------------------------
@@ -103,6 +103,26 @@ title('(Run 1c)');
 grid on;
 
 %---------------------------- Qestion 1d-------------------------------
+
+
+h = (rho * pi) / (M * 5);
+A = build_A(h, rho, M ,'no_sqrt');
+v = A * q_exact;
+
+% Jacobi
+[q_gauss_seidel, real_err, rel_dis] = jacobi(A, v, q_exact, tol, StrCon);
+
+% Plot Results
+subplot(5,1,5); % 5 rows, 1 column, first plot
+semilogy(real_err, '-o');  % First line
+hold on;
+semilogy(rel_dis, '--*');  % Second line
+hold off;
+
+xlabel('Iterations');
+ylabel('Error (log)');
+title('(Run 1d)');
+grid on;
 
 
 %---------------------------- Qestion 2-------------------------------
