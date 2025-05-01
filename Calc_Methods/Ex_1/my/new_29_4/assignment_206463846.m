@@ -126,15 +126,17 @@ grid on;
 
 
 %---------------------------- Qestion 2-------------------------------
-% 1a Defenitions
+
+Q2 = figure('Visible', 'on');
+movegui(Q2, 'east');
 
 a = [1/5 ,1/2 ,2 ,2.5 ,10];
 q_aproxx_met = zeros(5, 18);
 
 for i=1:5
 
-    h = (a(i) * rho * pi) / (M);
-    A = build_A(h, rho, M ,'sqrt');
+    h(i) = (a(i) * rho * pi) / (M);
+    A = build_A(h(i), rho, M ,'sqrt');
     v = A * q_exact;
     
     detA(i) = abs(det(A));
@@ -142,11 +144,30 @@ for i=1:5
     
     trans_A = transpose(A);
     q_aproxx_met(i, :) = inv(trans_A * A) * trans_A * v;
-    rel_err(i) = (norm(q_sol - q_exact)) / norm(q_exact);
+    rel_err(i) = (norm(transpose(q_aproxx_met(i, :)) - q_exact)) / norm(q_exact);
     %q_error = misum(((A * q_sol) - v).^2)^0.5;
 
 
 end
+
+% make the log–log plot
+subplot(2,1,1); % 5 rows, 1 column, first plot
+loglog(h, detA, 'o-', 'LineWidth',1.5, 'MarkerSize',8)
+grid on
+
+% label your axes
+xlabel('Step size\,\,h')
+ylabel('Relative error')
+title('Relative error vs. step size on a log–log scale')
+
+subplot(2,1,2); % 5 rows, 1 column, first plot
+loglog(h, rel_err, 'o-', 'LineWidth',1.5, 'MarkerSize',8)
+grid on
+
+% label your axes
+xlabel('Step size\,\,h')
+ylabel('Relative error')
+title('Relative error vs. step size on a log–log scale')
 
 %---------------------------- Qestion 2a-------------------------------
 
